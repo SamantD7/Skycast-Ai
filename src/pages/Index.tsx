@@ -11,7 +11,7 @@ import AIInsights from "@/components/AIInsights";
 import ChatBot from "@/components/ChatBot";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { fetchCurrentWeather, fetchForecastWeather, getTimeOfDay, getWeatherBackground, WeatherData } from "@/lib/apiWeather";
-import { Cloud, PartlyCloudy } from "lucide-react";
+import { Cloud, CloudSun } from "lucide-react";
 
 const Index = () => {
   const [weatherData, setWeatherData] = useState<WeatherData>({
@@ -78,7 +78,7 @@ const Index = () => {
       
       <header className="text-center mb-8 animate-fade-in">
         <h1 className="text-4xl font-bold mb-2 flex items-center justify-center">
-          <PartlyCloudy className="h-10 w-10 mr-2 text-sky-500" />
+          <CloudSun className="h-10 w-10 mr-2 text-sky-500" />
           SkyCast AI
         </h1>
         <p className="text-muted-foreground">AI-powered weather insights</p>
