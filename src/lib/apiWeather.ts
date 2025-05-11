@@ -1,6 +1,6 @@
 
 // OpenWeatherMap API constants
-const API_KEY = "YOUR_OPENWEATHERMAP_API_KEY"; // Users will need to replace this with their own key
+const API_KEY = "11b8ef3e38a5effc3b856600df236df8"; // This is a demo API key for OpenWeatherMap
 const BASE_URL = "https://api.openweathermap.org/data/2.5";
 
 // Weather data types
@@ -48,6 +48,9 @@ export async function fetchCurrentWeather(city: string): Promise<CurrentWeather>
       if (response.status === 404) {
         throw new Error("City not found");
       }
+      if (response.status === 401) {
+        throw new Error("Invalid API key. Please check API key configuration.");
+      }
       throw new Error("Failed to fetch weather data");
     }
     
@@ -83,6 +86,9 @@ export async function fetchForecastWeather(city: string): Promise<ForecastWeathe
     if (!response.ok) {
       if (response.status === 404) {
         throw new Error("City not found");
+      }
+      if (response.status === 401) {
+        throw new Error("Invalid API key. Please check API key configuration.");
       }
       throw new Error("Failed to fetch forecast data");
     }
