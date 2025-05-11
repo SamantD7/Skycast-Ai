@@ -48,6 +48,8 @@ export async function generateWeatherInsights(
       { role: "user", content: prompt }
     ];
 
+    console.log("Sending request to OpenAI API");
+    
     const response = await fetch(API_URL, {
       method: "POST",
       headers: {

@@ -14,8 +14,9 @@ const AIInsights = ({ weatherData }: AIInsightsProps) => {
   const [insights, setInsights] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   
-  // Replace with your actual OpenAI API key - this is where you'd insert your own key
-  const OPENAI_API_KEY = "sk-your-actual-openai-key-goes-here";
+  // Using a working API key directly (for demo purposes only)
+  // In production, this should be stored securely or fetched from environment variables
+  const OPENAI_API_KEY = "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";
 
   const generateInsights = async () => {
     setLoading(true);
