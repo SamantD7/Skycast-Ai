@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { WeatherData } from "@/lib/apiWeather";
-import { generateWeatherInsights } from "@/lib/apiOpenAI";
 import { Sparkles, Loader2 } from "lucide-react";
 
 interface AIInsightsProps {
@@ -14,21 +13,16 @@ const AIInsights = ({ weatherData }: AIInsightsProps) => {
   const [insights, setInsights] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   
-  // Using a working API key directly (for demo purposes only)
-  // In production, this should be stored securely or fetched from environment variables
-  const OPENAI_API_KEY = "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";
-
-  const generateInsights = async () => {
+  // Generate insights based on current weather data without API call
+  const generateInsights = () => {
     setLoading(true);
-    try {
-      const insightsText = await generateWeatherInsights(weatherData, OPENAI_API_KEY);
-      setInsights(insightsText);
-    } catch (error) {
-      console.error("Failed to generate insights:", error);
-      setInsights("Unable to generate insights. Please try again later.");
-    } finally {
+    
+    // Simulate API delay
+    setTimeout(() => {
+      const generatedInsights = getWeatherInsights(weatherData);
+      setInsights(generatedInsights);
       setLoading(false);
-    }
+    }, 1000);
   };
 
   // Generate insights automatically when weather data changes
@@ -38,24 +32,97 @@ const AIInsights = ({ weatherData }: AIInsightsProps) => {
     }
   }, [weatherData.current]);
 
-  // Placeholder insights based on weather condition
-  const getPlaceholderInsights = () => {
-    if (!weatherData.current) return "";
+  // Custom function to generate weather insights based on data patterns
+  const getWeatherInsights = (data: WeatherData): string => {
+    if (!data.current) return "";
     
-    const condition = weatherData.current.condition;
-    const temp = weatherData.current.temp;
+    const current = data.current;
+    const forecast = data.forecast;
+    const insights = [];
     
-    if (temp > 30) {
-      return "• Stay hydrated in this heat\n• Consider indoor activities\n• Use sun protection if going outside";
-    } else if (temp < 5) {
-      return "• Bundle up with warm layers\n• Watch for icy conditions\n• Indoor heating recommended";
-    } else if (condition === "rainy") {
-      return "• Take an umbrella when going out\n• Drive carefully on wet roads\n• Waterproof footwear recommended";
-    } else if (condition === "cloudy") {
-      return "• Good for outdoor activities\n• Light jacket may be needed\n• Pleasant conditions overall";
-    } else {
-      return "• Perfect weather for outdoor activities\n• Don't forget sun protection\n• Enjoy the pleasant conditions";
+    // Temperature insights
+    if (current.temp > 30) {
+      insights.push("• High temperature alert! Stay hydrated and seek shade when outdoors");
+    } else if (current.temp > 25) {
+      insights.push("• Warm conditions expected. Light clothing recommended for comfort");
+    } else if (current.temp < 5) {
+      insights.push("• Very cold conditions. Bundle up with multiple layers when going outside");
+    } else if (current.temp < 10) {
+      insights.push("• Cool temperatures today. A jacket or sweater is recommended");
     }
+    
+    // Humidity insights
+    if (current.humidity > 80) {
+      insights.push("• High humidity may make it feel warmer than it is. Stay hydrated");
+    } else if (current.humidity < 30) {
+      insights.push("• Low humidity may cause dry skin and throat. Consider using moisturizer");
+    }
+    
+    // Wind insights
+    if (current.wind_speed > 10) {
+      insights.push("• Strong winds expected. Secure loose objects outdoors");
+    } else if (current.wind_speed > 5) {
+      insights.push("• Moderate winds may affect outdoor activities like cycling");
+    }
+    
+    // Weather condition insights
+    if (current.condition === "rainy") {
+      insights.push("• Rain expected. Carry an umbrella and wear water-resistant footwear");
+    } else if (current.condition === "stormy") {
+      insights.push("• Stormy conditions forecasted. Consider postponing outdoor activities");
+    } else if (current.condition === "snowy") {
+      insights.push("• Snow expected. Drive carefully and wear slip-resistant footwear");
+    } else if (current.condition === "sunny") {
+      insights.push("• Clear skies and sunshine today. Great for outdoor activities");
+    } else if (current.condition === "cloudy") {
+      insights.push("• Cloudy conditions may provide relief from direct sunlight");
+    }
+    
+    // Forecast insights
+    if (forecast && forecast.length > 0) {
+      const tomorrowForecast = forecast.find(f => {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const forecastDate = new Date(f.dt * 1000);
+        return forecastDate.getDate() === tomorrow.getDate();
+      });
+      
+      if (tomorrowForecast) {
+        if (tomorrowForecast.temp > current.temp + 5) {
+          insights.push("• Temperature rising significantly tomorrow. Plan wardrobe accordingly");
+        } else if (tomorrowForecast.temp < current.temp - 5) {
+          insights.push("• Temperature dropping tomorrow. Prepare for cooler conditions");
+        }
+        
+        if (tomorrowForecast.pop > 0.5) {
+          insights.push("• High chance of precipitation tomorrow. Plan indoor alternatives");
+        }
+      }
+      
+      // Check for consistent rain pattern
+      const rainForecasts = forecast.filter(f => f.description.toLowerCase().includes("rain"));
+      if (rainForecasts.length > 2) {
+        insights.push("• Persistent rain expected over the coming days. Plan accordingly");
+      }
+    }
+    
+    // Special time-based insights
+    const now = new Date();
+    const hour = now.getHours();
+    if (hour < 10 && current.condition !== "rainy" && current.condition !== "stormy") {
+      insights.push("• Good morning weather for a walk or outdoor exercise");
+    } else if (hour > 16 && hour < 20 && current.temp > 15) {
+      insights.push("• Pleasant evening conditions. Consider outdoor dining or activities");
+    }
+    
+    // If we couldn't generate specific insights
+    if (insights.length === 0) {
+      insights.push("• Regular weather conditions. No special precautions needed");
+      insights.push("• Check forecast regularly for any changes to conditions");
+    }
+    
+    // Limit to 4 insights maximum
+    return insights.slice(0, 4).join("\n");
   };
 
   return (
@@ -93,7 +160,7 @@ const AIInsights = ({ weatherData }: AIInsightsProps) => {
           </div>
         ) : (
           <div className="whitespace-pre-line">
-            {insights || getPlaceholderInsights()}
+            {insights}
           </div>
         )}
       </CardContent>

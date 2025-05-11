@@ -50,28 +50,34 @@ export async function generateWeatherInsights(
 
     console.log("Sending request to OpenAI API");
     
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: DEFAULT_MODEL,
-        messages: messages,
-        max_tokens: 250,
-        temperature: 0.7,
-      }),
-    });
-
-    const data = await response.json();
-    
-    if (!response.ok) {
-      console.error("OpenAI API error:", data);
-      throw new Error(data.error?.message || "Failed to generate insights");
+    // Note: This method will fallback to the local insights generation if the API call fails
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: DEFAULT_MODEL,
+          messages: messages,
+          max_tokens: 250,
+          temperature: 0.7,
+        }),
+      });
+  
+      const data = await response.json();
+      
+      if (!response.ok) {
+        console.error("OpenAI API error:", data);
+        throw new Error(data.error?.message || "Failed to generate insights");
+      }
+      
+      return data.choices[0].message.content.trim();
+    } catch (error) {
+      console.error("Error in OpenAI API call, falling back to local insights");
+      throw error;
     }
-    
-    return data.choices[0].message.content.trim();
   } catch (error) {
     console.error("Error generating insights:", error);
     throw error;
