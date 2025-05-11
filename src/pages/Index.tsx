@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
@@ -144,7 +143,7 @@ const Index = () => {
           <ChatBot weatherData={weatherData} />
           
           <footer className="text-center text-sm text-muted-foreground pt-6 pb-20">
-            <p>SkyCast AI - Weather data powered by OpenWeatherMap</p>
+            <p>SkyCast AI - Weather data powered by wttr.in</p>
             <p className="mt-1">
               <small>© 2025 SkyCast AI - All Rights Reserved</small>
             </p>
