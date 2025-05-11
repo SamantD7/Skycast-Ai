@@ -23,24 +23,28 @@ export async function generateWeatherInsights(
 ): Promise<string> {
   try {
     const prompt = `
-      Based on the following weather data, please provide 2-3 short, practical insights or recommendations:
+      Based on the following detailed weather data, provide 3-4 practical, personalized insights or recommendations:
       
       City: ${weatherData.current.city}, ${weatherData.current.country}
       Current Temperature: ${weatherData.current.temp}°C (feels like ${weatherData.current.feels_like}°C)
       Humidity: ${weatherData.current.humidity}%
       Wind: ${weatherData.current.wind_speed} m/s
-      Condition: ${weatherData.current.description}
+      Weather Condition: ${weatherData.current.description}
       
-      Forecast:
+      Forecast for next few days:
       ${weatherData.forecast?.slice(0, 3).map((day: any) => 
         `- ${new Date(day.dt * 1000).toLocaleDateString()}: ${day.temp}°C, ${day.description}, Precipitation: ${Math.round(day.pop * 100)}%`
       ).join('\n')}
       
-      Keep insights very concise (10-15 words each), specific, practical and relevant to the weather. Format as bullet points.
+      Provide actionable weather advice, clothing recommendations, activity suggestions, health precautions, or travel tips based on these specific conditions.
+      Format as bullet points, with each insight being concise (15-20 words). Focus on practical advice that's immediately useful.
     `;
 
     const messages: ChatMessage[] = [
-      { role: "system", content: "You are a helpful weather assistant providing brief, practical insights based on weather data. Focus on actionable recommendations and safety tips." },
+      { 
+        role: "system", 
+        content: "You are a helpful weather assistant providing brief, practical insights based on weather data. Focus on actionable recommendations, safety tips, and personalized advice. Be conversational but concise." 
+      },
       { role: "user", content: prompt }
     ];
 
@@ -48,12 +52,12 @@ export async function generateWeatherInsights(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
+        "Authorization": `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
         model: DEFAULT_MODEL,
         messages: messages,
-        max_tokens: 150,
+        max_tokens: 250,
         temperature: 0.7,
       }),
     });
@@ -61,13 +65,14 @@ export async function generateWeatherInsights(
     const data = await response.json();
     
     if (!response.ok) {
+      console.error("OpenAI API error:", data);
       throw new Error(data.error?.message || "Failed to generate insights");
     }
     
     return data.choices[0].message.content.trim();
   } catch (error) {
     console.error("Error generating insights:", error);
-    return "Unable to generate insights at this time.";
+    throw error;
   }
 }
 

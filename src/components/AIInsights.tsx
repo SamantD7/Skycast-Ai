@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,8 +14,8 @@ const AIInsights = ({ weatherData }: AIInsightsProps) => {
   const [insights, setInsights] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   
-  // Hardcoded API key - replace with your own OpenAI API key
-  const OPENAI_API_KEY = "sk-demo12345678901234567890123456789012345678901234";
+  // Replace with your actual OpenAI API key - this is where you'd insert your own key
+  const OPENAI_API_KEY = "sk-your-actual-openai-key-goes-here";
 
   const generateInsights = async () => {
     setLoading(true);
@@ -31,7 +32,7 @@ const AIInsights = ({ weatherData }: AIInsightsProps) => {
 
   // Generate insights automatically when weather data changes
   useEffect(() => {
-    if (weatherData.current && !loading) {
+    if (weatherData.current) {
       generateInsights();
     }
   }, [weatherData.current]);
