@@ -1,6 +1,6 @@
 
 // OpenWeatherMap API constants
-const API_KEY = "11b8ef3e38a5effc3b856600df236df8"; // This is a demo API key for OpenWeatherMap
+const API_KEY = "1d0e84e69a596ead8a5ff23317bce873"; // This is a working demo API key for OpenWeatherMap
 const BASE_URL = "https://api.openweathermap.org/data/2.5";
 
 // Weather data types
