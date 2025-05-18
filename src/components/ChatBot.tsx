@@ -100,17 +100,16 @@ const ChatBot = ({ weatherData }: ChatBotProps) => {
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <Button 
-          className="fixed bottom-4 right-4 w-12 h-12 rounded-full shadow-lg" 
-          size="icon"
+          className="fixed-button" 
           onClick={() => setIsOpen(true)}
         >
           <MessageSquare />
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-full sm:max-w-md p-0 flex flex-col h-full">
+      <SheetContent className="w-full h-full" style={{ maxWidth: '28rem', padding: 0, display: 'flex', flexDirection: 'column' }}>
         <SheetHeader className="p-4 border-b">
           <SheetTitle className="flex items-center gap-2">
-            <MessageSquare className="h-5 w-5" />
+            <MessageSquare className="h-5 w-5" style={{ height: '1.25rem', width: '1.25rem' }} />
             Weather Assistant
           </SheetTitle>
         </SheetHeader>
@@ -131,7 +130,7 @@ const ChatBot = ({ weatherData }: ChatBotProps) => {
                 />
                 <Button onClick={saveApiKey}>Save</Button>
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-sm" style={{ color: 'var(--muted-foreground)', fontSize: '0.75rem' }}>
                 Your API key will be stored in your browser's local storage.
               </p>
             </div>
@@ -152,14 +151,14 @@ const ChatBot = ({ weatherData }: ChatBotProps) => {
               
               {loading && (
                 <div className="chat-bubble chat-bubble-ai flex items-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" style={{ height: '1rem', width: '1rem' }} />
                   Thinking...
                 </div>
               )}
               
               {error && (
-                <div className="flex items-center gap-2 text-red-500 p-2">
-                  <XCircle className="h-4 w-4" />
+                <div className="flex items-center gap-2" style={{ color: 'red', padding: '0.5rem' }}>
+                  <XCircle className="h-4 w-4" style={{ height: '1rem', width: '1rem' }} />
                   {error}
                 </div>
               )}
@@ -185,9 +184,9 @@ const ChatBot = ({ weatherData }: ChatBotProps) => {
               disabled={loading || !input.trim() || !weatherData.current}
             >
               {loading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin" style={{ height: '1rem', width: '1rem' }} />
               ) : (
-                <Send className="h-4 w-4" />
+                <Send className="h-4 w-4" style={{ height: '1rem', width: '1rem' }} />
               )}
             </Button>
           </form>

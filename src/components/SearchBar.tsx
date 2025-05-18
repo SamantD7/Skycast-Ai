@@ -30,7 +30,7 @@ const SearchBar = ({ onSearch, isLoading }: SearchBarProps) => {
         disabled={isLoading}
       />
       <Button type="submit" disabled={isLoading || !city.trim()}>
-        <Search className="h-4 w-4 mr-2" />
+        <Search className="h-4 w-4 mr-2" style={{ height: '1rem', width: '1rem', marginRight: '0.5rem' }} />
         {isLoading ? "Searching..." : "Search"}
       </Button>
     </form>

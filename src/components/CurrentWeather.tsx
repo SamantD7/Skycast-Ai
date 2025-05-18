@@ -11,20 +11,20 @@ const CurrentWeather = ({ data }: CurrentWeatherProps) => {
   const timeOfDay = getTimeOfDay(data.dt, data.sunrise, data.sunset);
   
   return (
-    <Card className={`weather-card animate-fade-in glass-card ${timeOfDay === "day" ? "bg-blue-50/80" : "bg-blue-900/30 text-white"}`}>
+    <Card className={`weather-card animate-fade-in glass-card ${timeOfDay === "day" ? "current-weather-day" : "current-weather-night"}`}>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div>
             <CardTitle className="text-2xl font-bold">
               {data.city}, {data.country}
             </CardTitle>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
               {formatDateTime(data.dt, "full")}
             </p>
           </div>
           <div className="text-right">
             <div className="text-4xl font-bold">{Math.round(data.temp)}°C</div>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
               Feels like {Math.round(data.feels_like)}°C
             </p>
           </div>
@@ -38,25 +38,26 @@ const CurrentWeather = ({ data }: CurrentWeatherProps) => {
               src={getWeatherIconUrl(data.icon)} 
               alt={data.description}
               className="w-16 h-16"
+              style={{ width: '4rem', height: '4rem' }}
             />
             <span className="capitalize text-lg">{data.description}</span>
           </div>
           
           <div className="grid grid-cols-3 gap-4 text-center">
             <div className="flex flex-col items-center">
-              <Thermometer className="h-5 w-5" />
+              <Thermometer className="h-5 w-5" style={{ height: '1.25rem', width: '1.25rem' }} />
               <span className="text-sm">Humidity</span>
               <span className="font-medium">{data.humidity}%</span>
             </div>
             
             <div className="flex flex-col items-center">
-              <Wind className="h-5 w-5" />
+              <Wind className="h-5 w-5" style={{ height: '1.25rem', width: '1.25rem' }} />
               <span className="text-sm">Wind</span>
               <span className="font-medium">{data.wind_speed} m/s</span>
             </div>
             
             <div className="flex flex-col items-center">
-              <Cloud className="h-5 w-5" />
+              <Cloud className="h-5 w-5" style={{ height: '1.25rem', width: '1.25rem' }} />
               <span className="text-sm">Condition</span>
               <span className="font-medium capitalize">{data.condition}</span>
             </div>

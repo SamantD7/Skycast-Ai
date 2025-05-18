@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
@@ -77,10 +78,10 @@ const Index = () => {
       
       <header className="text-center mb-8 animate-fade-in">
         <h1 className="text-4xl font-bold mb-2 flex items-center justify-center">
-          <CloudSun className="h-10 w-10 mr-2 text-sky-500" />
+          <CloudSun className="h-10 w-10 mr-2" style={{ height: '2.5rem', width: '2.5rem', marginRight: '0.5rem', color: '#0ea5e9' }} />
           SkyCast AI
         </h1>
-        <p className="text-muted-foreground">AI-powered weather insights</p>
+        <p style={{ color: 'var(--muted-foreground)' }}>AI-powered weather insights</p>
       </header>
       
       <div className="flex justify-center mb-8">
@@ -88,8 +89,8 @@ const Index = () => {
       </div>
       
       {weatherData.error && (
-        <Card className="mb-8 bg-red-50 border-red-200 dark:bg-red-900/20">
-          <CardContent className="p-4 text-center text-red-600 dark:text-red-400">
+        <Card className="mb-8" style={{ backgroundColor: 'rgba(254, 226, 226, 0.5)', borderColor: 'rgba(248, 113, 113, 0.2)' }}>
+          <CardContent className="p-4 text-center" style={{ color: '#dc2626' }}>
             {weatherData.error}
           </CardContent>
         </Card>
@@ -97,9 +98,19 @@ const Index = () => {
       
       {!weatherData.current && !weatherData.loading && !weatherData.error && (
         <div className="text-center py-12">
-          <Cloud className="h-16 w-16 mx-auto text-muted-foreground/60 mb-4" />
+          <Cloud className="h-16 w-16 mx-auto mb-4" style={{ 
+            height: '4rem', 
+            width: '4rem', 
+            margin: '0 auto 1rem auto', 
+            color: 'var(--muted-foreground)', 
+            opacity: 0.6
+          }} />
           <h2 className="text-2xl font-medium mb-2">Welcome to SkyCast AI</h2>
-          <p className="text-muted-foreground max-w-md mx-auto">
+          <p style={{ 
+            color: 'var(--muted-foreground)', 
+            maxWidth: '28rem', 
+            margin: '0 auto' 
+          }}>
             Search for a city to get current weather, forecast, trends, and AI-powered insights.
           </p>
         </div>
@@ -107,9 +118,28 @@ const Index = () => {
       
       {weatherData.loading && (
         <div className="text-center py-12 animate-pulse">
-          <div className="h-16 w-16 rounded-full bg-primary/30 mx-auto mb-4"></div>
-          <div className="h-6 w-32 bg-muted rounded mx-auto mb-2"></div>
-          <div className="h-4 w-64 bg-muted/80 rounded mx-auto"></div>
+          <div style={{ 
+            height: '4rem', 
+            width: '4rem', 
+            borderRadius: '50%', 
+            backgroundColor: 'rgba(59, 130, 246, 0.3)', 
+            margin: '0 auto 1rem auto' 
+          }}></div>
+          <div style={{ 
+            height: '1.5rem', 
+            width: '8rem', 
+            backgroundColor: 'var(--muted)', 
+            borderRadius: '0.25rem', 
+            margin: '0 auto 0.5rem auto' 
+          }}></div>
+          <div style={{ 
+            height: '1rem', 
+            width: '16rem', 
+            backgroundColor: 'var(--muted)', 
+            opacity: 0.8, 
+            borderRadius: '0.25rem', 
+            margin: '0 auto' 
+          }}></div>
         </div>
       )}
       
@@ -142,7 +172,7 @@ const Index = () => {
           
           <ChatBot weatherData={weatherData} />
           
-          <footer className="text-center text-sm text-muted-foreground pt-6 pb-20">
+          <footer className="text-center text-sm pt-6 pb-20" style={{ color: 'var(--muted-foreground)' }}>
             <p>SkyCast AI - Weather data powered by wttr.in</p>
             <p className="mt-1">
               <small>© 2025 SkyCast AI - All Rights Reserved</small>
