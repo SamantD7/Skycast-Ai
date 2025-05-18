@@ -39,7 +39,7 @@ const ForecastWeather = ({ forecast }: ForecastWeatherProps) => {
   return (
     <Card className="weather-card glass-card">
       <CardHeader>
-        <CardTitle className="text-xl">5-Day Forecast</CardTitle>
+        <CardTitle className="text-xl">3-Day Forecast</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
