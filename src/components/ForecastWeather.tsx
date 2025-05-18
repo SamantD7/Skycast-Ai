@@ -38,11 +38,11 @@ const ForecastWeather = ({ forecast }: ForecastWeatherProps) => {
 
   return (
     <Card className="weather-card glass-card">
-      <CardHeader className="card__header">
-        <CardTitle className="card__title">3-Day Forecast</CardTitle>
+      <CardHeader>
+        <CardTitle className="text-xl">3-Day Forecast</CardTitle>
       </CardHeader>
-      <CardContent className="card__content">
-        <div className="grid grid--cols-1 grid--cols-md-5 grid__gap-4">
+      <CardContent>
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           {Object.entries(dailyForecasts)
             .slice(0, 5)
             .map(([date, forecasts]) => {
@@ -52,23 +52,23 @@ const ForecastWeather = ({ forecast }: ForecastWeatherProps) => {
               ) || forecasts[0];
               
               return (
-                <Card key={date} className="card p-3 flex flex--column items-center">
+                <Card key={date} className="p-3 flex flex-col items-center">
                   <h3 className="font-medium text-center">
                     {formatDateTime(forecasts[0].dt, "day")}
                   </h3>
                   <img
                     src={getWeatherIconUrl(midDayForecast.icon)}
                     alt={midDayForecast.description}
-                    className="weather__icon weather__icon--sm my-2"
+                    className="w-12 h-12 my-2"
                   />
-                  <p className="weather__temp">{Math.round(dayAvg.temp)}°C</p>
-                  <div className="text-muted text-xs mt-1 flex flex--column items-center space-y-1">
+                  <p className="text-xl font-bold">{Math.round(dayAvg.temp)}°C</p>
+                  <div className="text-xs text-muted-foreground mt-1 flex flex-col items-center space-y-1">
                     <div className="flex items-center">
-                      <Droplets className="icon icon--xs mr-1" />
+                      <Droplets className="h-3 w-3 mr-1" />
                       <span>{Math.round(dayAvg.humidity)}%</span>
                     </div>
                     <div className="flex items-center">
-                      <Wind className="icon icon--xs mr-1" />
+                      <Wind className="h-3 w-3 mr-1" />
                       <span>Precip: {Math.round(dayAvg.pop * 100)}%</span>
                     </div>
                   </div>

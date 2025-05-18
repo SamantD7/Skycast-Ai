@@ -69,9 +69,9 @@ const WeatherChart = ({ forecast, type }: WeatherChartProps) => {
   }: TooltipProps<number, string>) => {
     if (active && payload && payload.length) {
       return (
-        <div className="chart__tooltip">
+        <div className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
           <p className="font-medium">{`${label}`}</p>
-          <p>{`${config.title.split(" ")[0]}: ${
+          <p className="text-[${config.stroke}]">{`${config.title.split(" ")[0]}: ${
             payload[0].value
           } ${config.unit}`}</p>
         </div>
@@ -83,12 +83,12 @@ const WeatherChart = ({ forecast, type }: WeatherChartProps) => {
 
   return (
     <Card className="weather-card glass-card">
-      <CardHeader className="card__header">
-        <CardTitle className="card__title">{config.title}</CardTitle>
+      <CardHeader>
+        <CardTitle className="text-xl">{config.title}</CardTitle>
       </CardHeader>
-      <CardContent className="card__content">
-        <div className="chart__container">
-          <ResponsiveContainer width="100%" height={300}>
+      <CardContent>
+        <div className="h-[300px] w-full">
+          <ResponsiveContainer width="100%" height="100%">
             <LineChart
               data={chartData}
               margin={{ top: 5, right: 20, left: 10, bottom: 25 }}
