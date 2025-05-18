@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -127,22 +126,21 @@ const AIInsights = ({ weatherData }: AIInsightsProps) => {
 
   return (
     <Card className="weather-card glass-card">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-xl">
+      <CardHeader className="card__header flex items-center justify-between pb-2">
+        <CardTitle className="card__title">
           <div className="flex items-center">
-            <Sparkles className="h-5 w-5 mr-2 text-yellow-500" />
+            <Sparkles className="icon icon--sm mr-2 text-yellow-500" />
             AI Weather Insights
           </div>
         </CardTitle>
         <Button
-          size="sm"
-          variant="outline"
+          className="button button--sm button--outline"
           onClick={generateInsights}
           disabled={loading || !weatherData.current}
         >
           {loading ? (
             <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              <Loader2 className="icon icon--sm mr-2 animate-spin" />
               Generating...
             </>
           ) : (
@@ -150,11 +148,11 @@ const AIInsights = ({ weatherData }: AIInsightsProps) => {
           )}
         </Button>
       </CardHeader>
-      <CardContent>
+      <CardContent className="card__content">
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-4">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <p className="mt-2 text-sm text-muted-foreground">
+          <div className="flex flex--column items-center justify-center py-4">
+            <Loader2 className="icon icon--lg animate-spin text-primary" />
+            <p className="mt-2 text-sm text-muted">
               Analyzing weather patterns...
             </p>
           </div>

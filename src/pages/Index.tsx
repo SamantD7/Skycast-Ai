@@ -73,24 +73,24 @@ const Index = () => {
   }, [weatherData.current]);
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 md:p-8 max-w-7xl mx-auto">
+    <div className="app max-w-7xl mx-auto">
       <ThemeToggle />
       
-      <header className="text-center mb-8 animate-fade-in">
-        <h1 className="text-4xl font-bold mb-2 flex items-center justify-center">
-          <CloudSun className="h-10 w-10 mr-2 text-sky-500" />
+      <header className="app__header animate-fade-in">
+        <h1 className="flex items-center justify-center">
+          <CloudSun className="icon icon--lg mr-2 text-sky-500" />
           SkyCast AI
         </h1>
-        <p className="text-muted-foreground">AI-powered weather insights</p>
+        <p className="text-muted">AI-powered weather insights</p>
       </header>
       
-      <div className="flex justify-center mb-8">
+      <div className="flex flex--center mb-8">
         <SearchBar onSearch={handleSearch} isLoading={weatherData.loading} />
       </div>
       
       {weatherData.error && (
-        <Card className="mb-8 bg-red-50 border-red-200 dark:bg-red-900/20">
-          <CardContent className="p-4 text-center text-red-600 dark:text-red-400">
+        <Card className="card mb-8 card--error">
+          <CardContent className="card__content p-4 text-center text-red-600">
             {weatherData.error}
           </CardContent>
         </Card>
@@ -98,9 +98,9 @@ const Index = () => {
       
       {!weatherData.current && !weatherData.loading && !weatherData.error && (
         <div className="text-center py-12">
-          <Cloud className="h-16 w-16 mx-auto text-muted-foreground/60 mb-4" />
+          <Cloud className="icon icon--lg mx-auto text-muted mb-4" />
           <h2 className="text-2xl font-medium mb-2">Welcome to SkyCast AI</h2>
-          <p className="text-muted-foreground max-w-md mx-auto">
+          <p className="text-muted max-w-md mx-auto">
             Search for a city to get current weather, forecast, trends, and AI-powered insights.
           </p>
         </div>
@@ -108,44 +108,44 @@ const Index = () => {
       
       {weatherData.loading && (
         <div className="text-center py-12 animate-pulse">
-          <div className="h-16 w-16 rounded-full bg-primary/30 mx-auto mb-4"></div>
-          <div className="h-6 w-32 bg-muted rounded mx-auto mb-2"></div>
-          <div className="h-4 w-64 bg-muted/80 rounded mx-auto"></div>
+          <div className="loader mx-auto mb-4"></div>
+          <div className="loading-placeholder mx-auto mb-2"></div>
+          <div className="loading-placeholder-sm mx-auto"></div>
         </div>
       )}
       
       {weatherData.current && (
-        <div className="space-y-8 animate-fade-in">
+        <div className="app__content space-y-8 animate-fade-in">
           <CurrentWeather data={weatherData.current} />
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid--cols-1 grid--cols-md-2 grid__gap-6">
             <ForecastWeather forecast={weatherData.forecast} />
             <AIInsights weatherData={weatherData} />
           </div>
           
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)}>
-            <TabsList className="mb-4">
-              <TabsTrigger value="temperature">Temperature</TabsTrigger>
-              <TabsTrigger value="humidity">Humidity</TabsTrigger>
-              <TabsTrigger value="precipitation">Precipitation</TabsTrigger>
+            <TabsList className="tabs__list mb-4">
+              <TabsTrigger value="temperature" className="tabs__trigger">Temperature</TabsTrigger>
+              <TabsTrigger value="humidity" className="tabs__trigger">Humidity</TabsTrigger>
+              <TabsTrigger value="precipitation" className="tabs__trigger">Precipitation</TabsTrigger>
             </TabsList>
             
-            <TabsContent value="temperature">
+            <TabsContent value="temperature" className="tabs__content">
               <WeatherChart forecast={weatherData.forecast} type="temperature" />
             </TabsContent>
-            <TabsContent value="humidity">
+            <TabsContent value="humidity" className="tabs__content">
               <WeatherChart forecast={weatherData.forecast} type="humidity" />
             </TabsContent>
-            <TabsContent value="precipitation">
+            <TabsContent value="precipitation" className="tabs__content">
               <WeatherChart forecast={weatherData.forecast} type="precipitation" />
             </TabsContent>
           </Tabs>
           
           <ChatBot weatherData={weatherData} />
           
-          <footer className="text-center text-sm text-muted-foreground pt-6 pb-20">
-            <p>SkyCast AI - Weather data powered by wttr.in</p>
-            <p className="mt-1">
+          <footer className="app__footer">
+            <p className="text-muted text-sm">SkyCast AI - Weather data powered by wttr.in</p>
+            <p className="text-muted text-sm mt-1">
               <small>© 2025 SkyCast AI - All Rights Reserved</small>
             </p>
           </footer>
