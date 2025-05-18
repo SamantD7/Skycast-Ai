@@ -20,17 +20,17 @@ const SearchBar = ({ onSearch, isLoading }: SearchBarProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="form form__group">
+    <form onSubmit={handleSubmit} className="flex w-full max-w-md gap-2">
       <Input
         type="text"
         placeholder="Search for a city..."
         value={city}
         onChange={(e) => setCity(e.target.value)}
-        className="input"
+        className="flex-1"
         disabled={isLoading}
       />
-      <Button type="submit" disabled={isLoading || !city.trim()} className="button">
-        <Search className="icon icon--sm mr-2" />
+      <Button type="submit" disabled={isLoading || !city.trim()}>
+        <Search className="h-4 w-4 mr-2" />
         {isLoading ? "Searching..." : "Search"}
       </Button>
     </form>
