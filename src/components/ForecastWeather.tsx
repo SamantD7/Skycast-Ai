@@ -42,7 +42,7 @@ const ForecastWeather = ({ forecast }: ForecastWeatherProps) => {
         <CardTitle className="text-xl">3-Day Forecast</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 md\:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           {Object.entries(dailyForecasts)
             .slice(0, 5)
             .map(([date, forecasts]) => {
@@ -60,17 +60,15 @@ const ForecastWeather = ({ forecast }: ForecastWeatherProps) => {
                     src={getWeatherIconUrl(midDayForecast.icon)}
                     alt={midDayForecast.description}
                     className="w-12 h-12 my-2"
-                    style={{ width: '3rem', height: '3rem', margin: '0.5rem 0' }}
                   />
                   <p className="text-xl font-bold">{Math.round(dayAvg.temp)}°C</p>
-                  <div className="text-sm text-muted-foreground mt-1 flex flex-col items-center space-y-1"
-                       style={{ fontSize: '0.75rem', marginTop: '0.25rem' }}>
+                  <div className="text-xs text-muted-foreground mt-1 flex flex-col items-center space-y-1">
                     <div className="flex items-center">
-                      <Droplets className="h-3 w-3 mr-1" style={{ height: '0.75rem', width: '0.75rem', marginRight: '0.25rem' }} />
+                      <Droplets className="h-3 w-3 mr-1" />
                       <span>{Math.round(dayAvg.humidity)}%</span>
                     </div>
                     <div className="flex items-center">
-                      <Wind className="h-3 w-3 mr-1" style={{ height: '0.75rem', width: '0.75rem', marginRight: '0.25rem' }} />
+                      <Wind className="h-3 w-3 mr-1" />
                       <span>Precip: {Math.round(dayAvg.pop * 100)}%</span>
                     </div>
                   </div>
