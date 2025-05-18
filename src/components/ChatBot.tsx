@@ -96,28 +96,32 @@ const ChatBot = ({ weatherData }: ChatBotProps) => {
     setShowKeyInput(false);
   };
 
+  const chatBubbleClasses = {
+    user: "chat-bubble chat-bubble--user",
+    assistant: "chat-bubble chat-bubble--ai"
+  };
+
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <Button 
-          className="fixed bottom-4 right-4 w-12 h-12 rounded-full shadow-lg" 
-          size="icon"
+          className="fixed--bottom-right button button--icon" 
           onClick={() => setIsOpen(true)}
         >
-          <MessageSquare />
+          <MessageSquare className="icon" />
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-full sm:max-w-md p-0 flex flex-col h-full">
-        <SheetHeader className="p-4 border-b">
+      <SheetContent className="sheet w-full sm\:max-w-md p-0 flex flex--column h-full">
+        <SheetHeader className="chat__header">
           <SheetTitle className="flex items-center gap-2">
-            <MessageSquare className="h-5 w-5" />
+            <MessageSquare className="icon icon--sm" />
             Weather Assistant
           </SheetTitle>
         </SheetHeader>
         
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="chat__messages">
           {showKeyInput ? (
-            <div className="flex flex-col space-y-3">
+            <div className="flex flex--column space-y-3">
               <p className="text-sm">
                 Please enter your OpenAI API key to use the chatbot:
               </p>
@@ -127,11 +131,11 @@ const ChatBot = ({ weatherData }: ChatBotProps) => {
                   value={openAIKey}
                   onChange={(e) => setOpenAIKey(e.target.value)}
                   placeholder="sk-..."
-                  className="flex-1 p-2 border rounded"
+                  className="input flex-1 p-2 border rounded"
                 />
-                <Button onClick={saveApiKey}>Save</Button>
+                <Button onClick={saveApiKey} className="button">Save</Button>
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-muted text-xs">
                 Your API key will be stored in your browser's local storage.
               </p>
             </div>
@@ -142,24 +146,22 @@ const ChatBot = ({ weatherData }: ChatBotProps) => {
                 .map((msg, index) => (
                   <div
                     key={index}
-                    className={`chat-bubble ${
-                      msg.role === "user" ? "chat-bubble-user" : "chat-bubble-ai"
-                    }`}
+                    className={chatBubbleClasses[msg.role as keyof typeof chatBubbleClasses]}
                   >
                     {msg.content}
                   </div>
                 ))}
               
               {loading && (
-                <div className="chat-bubble chat-bubble-ai flex items-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                <div className="chat-bubble chat-bubble--ai flex items-center gap-2">
+                  <Loader2 className="icon icon--sm animate-spin" />
                   Thinking...
                 </div>
               )}
               
               {error && (
                 <div className="flex items-center gap-2 text-red-500 p-2">
-                  <XCircle className="h-4 w-4" />
+                  <XCircle className="icon icon--sm" />
                   {error}
                 </div>
               )}
@@ -172,22 +174,24 @@ const ChatBot = ({ weatherData }: ChatBotProps) => {
         {!showKeyInput && (
           <form
             onSubmit={handleSend}
-            className="border-t p-4 flex gap-2"
+            className="chat__input"
           >
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask about the weather..."
               disabled={loading || !weatherData.current}
+              className="input"
             />
             <Button
               type="submit" 
               disabled={loading || !input.trim() || !weatherData.current}
+              className="button"
             >
               {loading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="icon icon--sm animate-spin" />
               ) : (
-                <Send className="h-4 w-4" />
+                <Send className="icon icon--sm" />
               )}
             </Button>
           </form>
