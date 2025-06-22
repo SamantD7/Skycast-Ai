@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Calendar } from "lucide-react";
 import { toast } from "sonner";
 import WeatherCalendar from "@/components/WeatherCalendar";
-import { fetchForecastWeather, ForecastWeather } from "@/lib/apiWeather";
+import { fetchForecastWeather, ForecastWeather, fetchCurrentWeather, getTimeOfDay, getWeatherBackground } from "@/lib/apiWeather";
 
 const WeatherCalendarPage = () => {
   const { city } = useParams<{ city: string }>();
@@ -24,6 +24,23 @@ const WeatherCalendarPage = () => {
       try {
         const forecastData = await fetchForecastWeather(decodeURIComponent(city));
         setForecast(forecastData);
+        
+        // Set background based on current weather
+        try {
+          const currentWeather = await fetchCurrentWeather(decodeURIComponent(city));
+          const timeOfDay = getTimeOfDay(
+            currentWeather.dt,
+            currentWeather.sunrise,
+            currentWeather.sunset
+          );
+          const backgroundClass = getWeatherBackground(
+            currentWeather.condition,
+            timeOfDay
+          );
+          document.body.className = backgroundClass;
+        } catch (bgError) {
+          document.body.className = "weather-gradient-day";
+        }
       } catch (error: any) {
         console.error("Error fetching forecast:", error);
         setError(error.message || "Failed to fetch forecast data");
@@ -34,6 +51,11 @@ const WeatherCalendarPage = () => {
     };
 
     loadForecastData();
+    
+    // Cleanup function to reset background when leaving page
+    return () => {
+      document.body.className = "";
+    };
   }, [city]);
 
   if (!city) {
@@ -64,7 +86,7 @@ const WeatherCalendarPage = () => {
           <div>
             <h1 className="text-3xl font-bold">Weather Calendar</h1>
             <p className="text-muted-foreground">
-              7-day forecast for {decodeURIComponent(city)}
+              Weather outlook for {decodeURIComponent(city)}
             </p>
           </div>
         </div>
@@ -89,7 +111,7 @@ const WeatherCalendarPage = () => {
       {forecast.length > 0 && (
         <Card className="glass-card">
           <CardHeader>
-            <CardTitle>7-Day Weather Outlook</CardTitle>
+            <CardTitle>Weather Outlook</CardTitle>
           </CardHeader>
           <CardContent>
             <WeatherCalendar forecast={forecast} />

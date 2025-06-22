@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Brain } from "lucide-react";
 import { toast } from "sonner";
 import AIInsights from "@/components/AIInsights";
-import { fetchCurrentWeather, fetchForecastWeather, WeatherData } from "@/lib/apiWeather";
+import { fetchCurrentWeather, fetchForecastWeather, WeatherData, getTimeOfDay, getWeatherBackground } from "@/lib/apiWeather";
 
 const AIInsightsPage = () => {
   const { city } = useParams<{ city: string }>();
@@ -33,6 +33,18 @@ const AIInsightsPage = () => {
           loading: false,
           error: null,
         });
+        
+        // Set background based on current weather
+        const timeOfDay = getTimeOfDay(
+          current.dt,
+          current.sunrise,
+          current.sunset
+        );
+        const backgroundClass = getWeatherBackground(
+          current.condition,
+          timeOfDay
+        );
+        document.body.className = backgroundClass;
       } catch (error: any) {
         console.error("Error fetching weather:", error);
         setWeatherData(prev => ({
@@ -41,10 +53,16 @@ const AIInsightsPage = () => {
           error: error.message || "Failed to fetch weather data",
         }));
         toast.error(error.message || "Failed to fetch weather data");
+        document.body.className = "weather-gradient-day";
       }
     };
 
     loadWeatherData();
+    
+    // Cleanup function to reset background when leaving page
+    return () => {
+      document.body.className = "";
+    };
   }, [city]);
 
   if (!city) {

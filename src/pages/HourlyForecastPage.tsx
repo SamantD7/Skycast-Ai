@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Clock } from "lucide-react";
 import { toast } from "sonner";
 import HourlyForecast from "@/components/HourlyForecast";
-import { fetchForecastWeather, ForecastWeather } from "@/lib/apiWeather";
+import { fetchForecastWeather, ForecastWeather, fetchCurrentWeather, getTimeOfDay, getWeatherBackground } from "@/lib/apiWeather";
 
 const HourlyForecastPage = () => {
   const { city } = useParams<{ city: string }>();
@@ -24,6 +23,23 @@ const HourlyForecastPage = () => {
       try {
         const forecastData = await fetchForecastWeather(decodeURIComponent(city));
         setForecast(forecastData);
+        
+        // Set background based on current weather
+        try {
+          const currentWeather = await fetchCurrentWeather(decodeURIComponent(city));
+          const timeOfDay = getTimeOfDay(
+            currentWeather.dt,
+            currentWeather.sunrise,
+            currentWeather.sunset
+          );
+          const backgroundClass = getWeatherBackground(
+            currentWeather.condition,
+            timeOfDay
+          );
+          document.body.className = backgroundClass;
+        } catch (bgError) {
+          document.body.className = "weather-gradient-day";
+        }
       } catch (error: any) {
         console.error("Error fetching forecast:", error);
         setError(error.message || "Failed to fetch forecast data");
@@ -34,6 +50,11 @@ const HourlyForecastPage = () => {
     };
 
     loadForecastData();
+    
+    // Cleanup function to reset background when leaving page
+    return () => {
+      document.body.className = "";
+    };
   }, [city]);
 
   if (!city) {

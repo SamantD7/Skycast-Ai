@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import WeatherComparison from "@/components/WeatherComparison";
-import { fetchCurrentWeather, CurrentWeather } from "@/lib/apiWeather";
+import { fetchCurrentWeather, CurrentWeather, getTimeOfDay, getWeatherBackground } from "@/lib/apiWeather";
 
 const WeatherComparisonPage = () => {
   const { city } = useParams<{ city: string }>();
@@ -24,16 +24,34 @@ const WeatherComparisonPage = () => {
       try {
         const weather = await fetchCurrentWeather(decodeURIComponent(city));
         setCurrentWeather(weather);
+        
+        // Set background based on current weather
+        const timeOfDay = getTimeOfDay(
+          weather.dt,
+          weather.sunrise,
+          weather.sunset
+        );
+        const backgroundClass = getWeatherBackground(
+          weather.condition,
+          timeOfDay
+        );
+        document.body.className = backgroundClass;
       } catch (error: any) {
         console.error("Error fetching weather:", error);
         setError(error.message || "Failed to fetch weather data");
         toast.error(error.message || "Failed to fetch weather data");
+        document.body.className = "weather-gradient-day";
       } finally {
         setLoading(false);
       }
     };
 
     loadWeatherData();
+    
+    // Cleanup function to reset background when leaving page
+    return () => {
+      document.body.className = "";
+    };
   }, [city]);
 
   if (!city) {
