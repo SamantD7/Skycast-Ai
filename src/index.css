@@ -132,4 +132,13 @@
   .chat-bubble-ai {
     @apply bg-secondary text-secondary-foreground mr-auto;
   }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }

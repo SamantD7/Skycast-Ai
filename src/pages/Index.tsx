@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
@@ -8,9 +9,12 @@ import ForecastWeather from "@/components/ForecastWeather";
 import WeatherChart from "@/components/WeatherChart";
 import AIInsights from "@/components/AIInsights";
 import ChatBot from "@/components/ChatBot";
+import WeatherComparison from "@/components/WeatherComparison";
+import HourlyForecast from "@/components/HourlyForecast";
+import WeatherCalendar from "@/components/WeatherCalendar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { fetchCurrentWeather, fetchForecastWeather, getTimeOfDay, getWeatherBackground, WeatherData } from "@/lib/apiWeather";
-import { Cloud, CloudSun } from "lucide-react";
+import { Cloud, CloudSun, TrendingUp, Clock, Calendar, Brain } from "lucide-react";
 
 const Index = () => {
   const [weatherData, setWeatherData] = useState<WeatherData>({
@@ -117,9 +121,51 @@ const Index = () => {
         <div className="space-y-8 animate-fade-in">
           <CurrentWeather data={weatherData.current} />
           
+          {/* Weather Modules Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <ForecastWeather forecast={weatherData.forecast} />
-            <AIInsights weatherData={weatherData} />
+            {/* Module 1: AI Weather Insights */}
+            <Card className="weather-card glass-card cursor-pointer hover:shadow-xl transition-all duration-300">
+              <div className="p-6">
+                <div className="flex items-center mb-4">
+                  <Brain className="h-6 w-6 text-purple-500 mr-3" />
+                  <h3 className="text-xl font-semibold">AI Weather Insights</h3>
+                </div>
+                <AIInsights weatherData={weatherData} />
+              </div>
+            </Card>
+
+            {/* Module 2: Weather Comparison */}
+            <Card className="weather-card glass-card cursor-pointer hover:shadow-xl transition-all duration-300">
+              <div className="p-6">
+                <div className="flex items-center mb-4">
+                  <TrendingUp className="h-6 w-6 text-blue-500 mr-3" />
+                  <h3 className="text-xl font-semibold">Today vs Yesterday</h3>
+                </div>
+                <WeatherComparison currentWeather={weatherData.current} />
+              </div>
+            </Card>
+
+            {/* Module 3: Hourly Forecast */}
+            <Card className="weather-card glass-card cursor-pointer hover:shadow-xl transition-all duration-300">
+              <div className="p-6">
+                <div className="flex items-center mb-4">
+                  <Clock className="h-6 w-6 text-green-500 mr-3" />
+                  <h3 className="text-xl font-semibold">Hourly Forecast</h3>
+                </div>
+                <HourlyForecast forecast={weatherData.forecast} />
+              </div>
+            </Card>
+
+            {/* Module 4: Weather Calendar */}
+            <Card className="weather-card glass-card cursor-pointer hover:shadow-xl transition-all duration-300">
+              <div className="p-6">
+                <div className="flex items-center mb-4">
+                  <Calendar className="h-6 w-6 text-orange-500 mr-3" />
+                  <h3 className="text-xl font-semibold">7-Day Calendar</h3>
+                </div>
+                <WeatherCalendar forecast={weatherData.forecast} />
+              </div>
+            </Card>
           </div>
           
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)}>
