@@ -7,7 +7,7 @@ interface WeatherCalendarProps {
 }
 
 const WeatherCalendar = ({ forecast }: WeatherCalendarProps) => {
-  // Group forecast by day and get daily averages
+  // Group forecast by day and get daily averages for 7 days
   const getDailyForecasts = () => {
     const dailyData: Record<string, ForecastWeather[]> = {};
     
@@ -44,6 +44,10 @@ const WeatherCalendar = ({ forecast }: WeatherCalendarProps) => {
           icon: midDayForecast.icon,
           description: midDayForecast.description,
           dayName: formatDateTime(items[0].dt, "day"),
+          fullDate: new Date(items[0].dt * 1000).toLocaleDateString('en-US', { 
+            month: 'short', 
+            day: 'numeric' 
+          }),
         };
       });
   };
@@ -59,41 +63,44 @@ const WeatherCalendar = ({ forecast }: WeatherCalendarProps) => {
   }
 
   return (
-    <div className="space-y-3">
-      <h4 className="text-sm font-medium text-muted-foreground">7-Day Outlook</h4>
+    <div className="space-y-4">
+      <h4 className="text-lg font-medium text-center">7-Day Weather Outlook</h4>
       
-      <div className="grid grid-cols-1 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-3">
         {dailyForecasts.map((day, index) => (
-          <Card key={index} className="p-3 hover:bg-muted/50 transition-colors">
-            <CardContent className="p-0">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="text-sm font-medium min-w-[3rem]">
-                    {index === 0 ? "Today" : day.dayName}
-                  </div>
-                  
-                  <img
-                    src={getWeatherIconUrl(day.icon)}
-                    alt={day.description}
-                    className="w-6 h-6"
-                  />
-                  
-                  <div className="text-xs text-muted-foreground capitalize truncate max-w-[6rem]">
-                    {day.description}
-                  </div>
+          <Card key={index} className="p-4 text-center hover:bg-muted/50 transition-colors">
+            <CardContent className="p-0 space-y-3">
+              <div className="space-y-1">
+                <div className="text-sm font-semibold">
+                  {index === 0 ? "Today" : day.dayName}
                 </div>
-                
-                <div className="flex items-center space-x-4 text-sm">
-                  <div className="text-center">
-                    <div className="font-bold">{day.maxTemp}°</div>
-                    <div className="text-xs text-muted-foreground">{day.minTemp}°</div>
-                  </div>
-                  
-                  <div className="text-center">
-                    <div className="text-xs text-blue-500">{day.precipitation}%</div>
-                    <div className="text-xs text-muted-foreground">{day.humidity}%</div>
-                  </div>
+                <div className="text-xs text-muted-foreground">
+                  {day.fullDate}
                 </div>
+              </div>
+              
+              <img
+                src={getWeatherIconUrl(day.icon)}
+                alt={day.description}
+                className="w-12 h-12 mx-auto"
+              />
+              
+              <div className="space-y-1">
+                <div className="text-lg font-bold">
+                  {day.maxTemp}°
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {day.minTemp}°
+                </div>
+              </div>
+              
+              <div className="text-xs capitalize text-muted-foreground">
+                {day.description}
+              </div>
+              
+              <div className="flex justify-between text-xs">
+                <span className="text-blue-500">{day.precipitation}%</span>
+                <span className="text-muted-foreground">{day.humidity}%</span>
               </div>
             </CardContent>
           </Card>
