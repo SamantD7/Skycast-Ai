@@ -57,7 +57,6 @@ const HourlyForecast = ({ forecast }: HourlyForecastProps) => {
       <div
         ref={scrollRef}
         className="flex space-x-3 overflow-x-auto scrollbar-hide pb-2"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {next24Hours.map((item, index) => (
           <Card key={index} className="flex-shrink-0 w-20 p-3 text-center">
@@ -87,12 +86,6 @@ const HourlyForecast = ({ forecast }: HourlyForecastProps) => {
           </Card>
         ))}
       </div>
-
-      <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
     </div>
   );
 };
