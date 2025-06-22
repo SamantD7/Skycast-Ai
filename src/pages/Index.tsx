@@ -16,6 +16,23 @@ const Index = () => {
   const [searchedCity, setSearchedCity] = useState<string>("");
   const navigate = useNavigate();
 
+  // Load saved city and weather data on component mount
+  useEffect(() => {
+    const savedCity = localStorage.getItem('skycast-searched-city');
+    const savedWeather = localStorage.getItem('skycast-current-weather');
+    
+    if (savedCity && savedWeather) {
+      try {
+        setSearchedCity(savedCity);
+        setCurrentWeather(JSON.parse(savedWeather));
+      } catch (error) {
+        console.error('Error parsing saved weather data:', error);
+        localStorage.removeItem('skycast-searched-city');
+        localStorage.removeItem('skycast-current-weather');
+      }
+    }
+  }, []);
+
   const handleSearch = async (city: string) => {
     setLoading(true);
     setError(null);
@@ -24,6 +41,11 @@ const Index = () => {
       const weather = await fetchCurrentWeather(city);
       setCurrentWeather(weather);
       setSearchedCity(city);
+      
+      // Save to localStorage
+      localStorage.setItem('skycast-searched-city', city);
+      localStorage.setItem('skycast-current-weather', JSON.stringify(weather));
+      
       toast.success(`Weather data loaded for ${city}`);
     } catch (error: any) {
       console.error("Error fetching weather:", error);

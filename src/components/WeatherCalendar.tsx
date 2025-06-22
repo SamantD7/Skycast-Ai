@@ -64,7 +64,7 @@ const WeatherCalendar = ({ forecast }: WeatherCalendarProps) => {
 
   return (
     <div className="space-y-4">
-      <h4 className="text-lg font-medium text-center">7-Day Weather Outlook</h4>
+      <h4 className="text-lg font-medium text-center">Weather Outlook</h4>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-3">
         {dailyForecasts.map((day, index) => (
