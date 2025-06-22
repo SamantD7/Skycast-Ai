@@ -22,8 +22,8 @@ const HourlyForecast = ({ forecast }: HourlyForecastProps) => {
     }
   };
 
-  // Get next 24 hours worth of data
-  const next24Hours = forecast.slice(0, 8);
+  // Get next 24 hours worth of data (up to 8 data points for 24 hours with 3-hour intervals)
+  const next24Hours = forecast.slice(0, 12);
 
   if (next24Hours.length === 0) {
     return (
@@ -36,13 +36,13 @@ const HourlyForecast = ({ forecast }: HourlyForecastProps) => {
   return (
     <div className="space-y-6">
       {/* Temperature Chart */}
-      <WeatherChart forecast={forecast} type="temperature" />
+      <WeatherChart forecast={next24Hours} type="temperature" />
       
       {/* Humidity Chart */}
-      <WeatherChart forecast={forecast} type="humidity" />
+      <WeatherChart forecast={next24Hours} type="humidity" />
       
       {/* Precipitation Chart */}
-      <WeatherChart forecast={forecast} type="precipitation" />
+      <WeatherChart forecast={next24Hours} type="precipitation" />
 
       {/* Scrollable Hourly Cards */}
       <div className="relative">

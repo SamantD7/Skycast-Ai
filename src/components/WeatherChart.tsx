@@ -19,13 +19,11 @@ interface WeatherChartProps {
 }
 
 const WeatherChart = ({ forecast, type }: WeatherChartProps) => {
-  // Filter forecast to next 24 hours (assuming 3-hour intervals)
-  const next24Hours = forecast.slice(0, 8);
-  
-  // Transform data for the chart
-  const chartData = next24Hours.map((item) => {
+  // Use all provided forecast data
+  const chartData = forecast.map((item) => {
     return {
       time: formatDateTime(item.dt, "time"),
+      fullDateTime: formatDateTime(item.dt, "full"),
       temperature: Math.round(item.temp),
       humidity: item.humidity,
       precipitation: Math.round(item.pop * 100),
@@ -84,10 +82,10 @@ const WeatherChart = ({ forecast, type }: WeatherChartProps) => {
   return (
     <Card className="weather-card glass-card">
       <CardHeader>
-        <CardTitle className="text-xl">{config.title}</CardTitle>
+        <CardTitle className="text-lg">{config.title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[300px] w-full">
+        <div className="h-[250px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
               data={chartData}
@@ -119,9 +117,10 @@ const WeatherChart = ({ forecast, type }: WeatherChartProps) => {
                 tick={{ fontSize: 12 }}
                 angle={-45}
                 textAnchor="end"
+                height={60}
               />
               <YAxis
-                domain={type === "temperature" ? ["dataMin - 5", "dataMax + 5"] : [0, 100]}
+                domain={type === "temperature" ? ["dataMin - 2", "dataMax + 2"] : [0, 100]}
                 tick={{ fontSize: 12 }}
               />
               <Tooltip content={<CustomTooltip />} />

@@ -20,7 +20,7 @@ const WeatherCalendar = ({ forecast }: WeatherCalendarProps) => {
     });
 
     return Object.entries(dailyData)
-      .slice(0, 7) // Get next 7 days
+      .slice(0, 7) // Ensure we get exactly 7 days
       .map(([date, items]) => {
         const avgTemp = items.reduce((sum, item) => sum + item.temp, 0) / items.length;
         const maxTemp = Math.max(...items.map(item => item.temp));
