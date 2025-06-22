@@ -2,78 +2,69 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useNavigate } from "react-router-dom";
 import SearchBar from "@/components/SearchBar";
 import CurrentWeather from "@/components/CurrentWeather";
-import ForecastWeather from "@/components/ForecastWeather";
-import WeatherChart from "@/components/WeatherChart";
-import AIInsights from "@/components/AIInsights";
-import ChatBot from "@/components/ChatBot";
-import WeatherComparison from "@/components/WeatherComparison";
-import HourlyForecast from "@/components/HourlyForecast";
-import WeatherCalendar from "@/components/WeatherCalendar";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { fetchCurrentWeather, fetchForecastWeather, getTimeOfDay, getWeatherBackground, WeatherData } from "@/lib/apiWeather";
-import { Cloud, CloudSun, TrendingUp, Clock, Calendar, Brain } from "lucide-react";
+import { fetchCurrentWeather, getTimeOfDay, getWeatherBackground, CurrentWeather as CurrentWeatherType } from "@/lib/apiWeather";
+import { Cloud, CloudSun, Brain, TrendingUp, Clock, Calendar } from "lucide-react";
 
 const Index = () => {
-  const [weatherData, setWeatherData] = useState<WeatherData>({
-    current: null as any,
-    forecast: [],
-    loading: false,
-    error: null,
-  });
-  const [activeTab, setActiveTab] = useState<"temperature" | "humidity" | "precipitation">("temperature");
+  const [currentWeather, setCurrentWeather] = useState<CurrentWeatherType | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [searchedCity, setSearchedCity] = useState<string>("");
+  const navigate = useNavigate();
 
   const handleSearch = async (city: string) => {
-    setWeatherData((prev) => ({ ...prev, loading: true, error: null }));
+    setLoading(true);
+    setError(null);
     
     try {
-      const current = await fetchCurrentWeather(city);
-      const forecast = await fetchForecastWeather(city);
-      
-      setWeatherData({
-        current,
-        forecast,
-        loading: false,
-        error: null,
-      });
-      
+      const weather = await fetchCurrentWeather(city);
+      setCurrentWeather(weather);
+      setSearchedCity(city);
       toast.success(`Weather data loaded for ${city}`);
     } catch (error: any) {
       console.error("Error fetching weather:", error);
-      setWeatherData((prev) => ({
-        ...prev,
-        loading: false,
-        error: error.message || "Failed to fetch weather data",
-      }));
+      setError(error.message || "Failed to fetch weather data");
+      setCurrentWeather(null);
       toast.error(error.message || "Failed to fetch weather data");
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const handleModuleClick = (module: string) => {
+    if (!searchedCity) {
+      toast.error("Please search for a city first");
+      return;
+    }
+    navigate(`/${module}/${encodeURIComponent(searchedCity)}`);
   };
 
   // Set background based on current weather
   useEffect(() => {
-    if (weatherData.current) {
+    if (currentWeather) {
       const timeOfDay = getTimeOfDay(
-        weatherData.current.dt,
-        weatherData.current.sunrise,
-        weatherData.current.sunset
+        currentWeather.dt,
+        currentWeather.sunrise,
+        currentWeather.sunset
       );
       const backgroundClass = getWeatherBackground(
-        weatherData.current.condition,
+        currentWeather.condition,
         timeOfDay
       );
       
       document.body.className = backgroundClass;
     } else {
-      // Default background
       document.body.className = "weather-gradient-day";
     }
     
     return () => {
       document.body.className = "";
     };
-  }, [weatherData.current]);
+  }, [currentWeather]);
 
   return (
     <div className="min-h-screen p-4 sm:p-6 md:p-8 max-w-7xl mx-auto">
@@ -88,28 +79,28 @@ const Index = () => {
       </header>
       
       <div className="flex justify-center mb-8">
-        <SearchBar onSearch={handleSearch} isLoading={weatherData.loading} />
+        <SearchBar onSearch={handleSearch} isLoading={loading} />
       </div>
       
-      {weatherData.error && (
+      {error && (
         <Card className="mb-8 bg-red-50 border-red-200 dark:bg-red-900/20">
           <CardContent className="p-4 text-center text-red-600 dark:text-red-400">
-            {weatherData.error}
+            {error}
           </CardContent>
         </Card>
       )}
       
-      {!weatherData.current && !weatherData.loading && !weatherData.error && (
+      {!currentWeather && !loading && !error && (
         <div className="text-center py-12">
           <Cloud className="h-16 w-16 mx-auto text-muted-foreground/60 mb-4" />
           <h2 className="text-2xl font-medium mb-2">Welcome to SkyCast AI</h2>
           <p className="text-muted-foreground max-w-md mx-auto">
-            Search for a city to get current weather, forecast, trends, and AI-powered insights.
+            Search for a city to get current weather and explore detailed forecasts through our modules.
           </p>
         </div>
       )}
       
-      {weatherData.loading && (
+      {loading && (
         <div className="text-center py-12 animate-pulse">
           <div className="h-16 w-16 rounded-full bg-primary/30 mx-auto mb-4"></div>
           <div className="h-6 w-32 bg-muted rounded mx-auto mb-2"></div>
@@ -117,83 +108,79 @@ const Index = () => {
         </div>
       )}
       
-      {weatherData.current && (
+      {currentWeather && (
         <div className="space-y-8 animate-fade-in">
-          <CurrentWeather data={weatherData.current} />
+          <CurrentWeather data={currentWeather} />
           
           {/* Weather Modules Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Module 1: AI Weather Insights */}
-            <Card className="weather-card glass-card cursor-pointer hover:shadow-xl transition-all duration-300">
-              <div className="p-6">
-                <div className="flex items-center mb-4">
-                  <Brain className="h-6 w-6 text-purple-500 mr-3" />
-                  <h3 className="text-xl font-semibold">AI Weather Insights</h3>
+          <div className="mt-12">
+            <h2 className="text-2xl font-bold text-center mb-8">Explore Weather Details</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Module 1: AI Weather Insights */}
+              <Card 
+                className="weather-card glass-card cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105"
+                onClick={() => handleModuleClick('ai-insights')}
+              >
+                <div className="p-6">
+                  <div className="flex items-center mb-4">
+                    <Brain className="h-8 w-8 text-purple-500 mr-3" />
+                    <h3 className="text-xl font-semibold">AI Weather Insights</h3>
+                  </div>
+                  <p className="text-muted-foreground">
+                    Get intelligent weather analysis and personalized recommendations powered by AI.
+                  </p>
                 </div>
-                <AIInsights weatherData={weatherData} />
-              </div>
-            </Card>
+              </Card>
 
-            {/* Module 2: Weather Comparison */}
-            <Card className="weather-card glass-card cursor-pointer hover:shadow-xl transition-all duration-300">
-              <div className="p-6">
-                <div className="flex items-center mb-4">
-                  <TrendingUp className="h-6 w-6 text-blue-500 mr-3" />
-                  <h3 className="text-xl font-semibold">Today vs Yesterday</h3>
+              {/* Module 2: Weather Comparison */}
+              <Card 
+                className="weather-card glass-card cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105"
+                onClick={() => handleModuleClick('weather-comparison')}
+              >
+                <div className="p-6">
+                  <div className="flex items-center mb-4">
+                    <TrendingUp className="h-8 w-8 text-blue-500 mr-3" />
+                    <h3 className="text-xl font-semibold">Weather Comparison</h3>
+                  </div>
+                  <p className="text-muted-foreground">
+                    Compare today's weather with yesterday's conditions side by side.
+                  </p>
                 </div>
-                <WeatherComparison currentWeather={weatherData.current} />
-              </div>
-            </Card>
+              </Card>
 
-            {/* Module 3: Hourly Forecast */}
-            <Card className="weather-card glass-card cursor-pointer hover:shadow-xl transition-all duration-300">
-              <div className="p-6">
-                <div className="flex items-center mb-4">
-                  <Clock className="h-6 w-6 text-green-500 mr-3" />
-                  <h3 className="text-xl font-semibold">Hourly Forecast</h3>
+              {/* Module 3: Hourly Forecast */}
+              <Card 
+                className="weather-card glass-card cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105"
+                onClick={() => handleModuleClick('hourly-forecast')}
+              >
+                <div className="p-6">
+                  <div className="flex items-center mb-4">
+                    <Clock className="h-8 w-8 text-green-500 mr-3" />
+                    <h3 className="text-xl font-semibold">Hourly Forecast</h3>
+                  </div>
+                  <p className="text-muted-foreground">
+                    View detailed hour-by-hour weather forecast for the next 24 hours.
+                  </p>
                 </div>
-                <HourlyForecast forecast={weatherData.forecast} />
-              </div>
-            </Card>
+              </Card>
 
-            {/* Module 4: Weather Calendar */}
-            <Card className="weather-card glass-card cursor-pointer hover:shadow-xl transition-all duration-300">
-              <div className="p-6">
-                <div className="flex items-center mb-4">
-                  <Calendar className="h-6 w-6 text-orange-500 mr-3" />
-                  <h3 className="text-xl font-semibold">7-Day Calendar</h3>
+              {/* Module 4: Weather Calendar */}
+              <Card 
+                className="weather-card glass-card cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105"
+                onClick={() => handleModuleClick('weather-calendar')}
+              >
+                <div className="p-6">
+                  <div className="flex items-center mb-4">
+                    <Calendar className="h-8 w-8 text-orange-500 mr-3" />
+                    <h3 className="text-xl font-semibold">Weather Calendar</h3>
+                  </div>
+                  <p className="text-muted-foreground">
+                    Explore the 7-day weather forecast in an easy-to-read calendar format.
+                  </p>
                 </div>
-                <WeatherCalendar forecast={weatherData.forecast} />
-              </div>
-            </Card>
+              </Card>
+            </div>
           </div>
-          
-          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)}>
-            <TabsList className="mb-4">
-              <TabsTrigger value="temperature">Temperature</TabsTrigger>
-              <TabsTrigger value="humidity">Humidity</TabsTrigger>
-              <TabsTrigger value="precipitation">Precipitation</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="temperature">
-              <WeatherChart forecast={weatherData.forecast} type="temperature" />
-            </TabsContent>
-            <TabsContent value="humidity">
-              <WeatherChart forecast={weatherData.forecast} type="humidity" />
-            </TabsContent>
-            <TabsContent value="precipitation">
-              <WeatherChart forecast={weatherData.forecast} type="precipitation" />
-            </TabsContent>
-          </Tabs>
-          
-          <ChatBot weatherData={weatherData} />
-          
-          <footer className="text-center text-sm text-muted-foreground pt-6 pb-20">
-            <p>SkyCast AI - Weather data powered by wttr.in</p>
-            <p className="mt-1">
-              <small>© 2025 SkyCast AI - All Rights Reserved</small>
-            </p>
-          </footer>
         </div>
       )}
     </div>
