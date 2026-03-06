@@ -1,73 +1,119 @@
-# Welcome to your Lovable project
+# Skycast AI Whisper
 
-## Project info
+## Project Overview
 
-**URL**: https://lovable.dev/projects/b250d1e0-1d36-4cd3-bbc6-cd6f33b98c19
+Skycast AI Whisper is a TypeScript-based web application that utilizes advanced speech recognition through OpenAI’s Whisper model to provide an interactive, voice-activated weather forecast experience. Users can retrieve live weather updates and interact with the application through natural language voice commands, streamlining access to meteorological information.
 
-## How can I edit this code?
+> **Live Demo:** [https://skycast-ai-whisper.vercel.app](https://skycast-ai-whisper.vercel.app)
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## Project Features
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/b250d1e0-1d36-4cd3-bbc6-cd6f33b98c19) and start prompting.
+- **Voice-Driven Weather Access**: Get real-time weather forecasts with spoken commands.
+- **State-of-the-Art Speech Recognition**: Integrates OpenAI Whisper for robust and accurate audio-to-text conversion.
+- **User-Friendly Interface**: Clean and modern UI built with Tailwind CSS and Vite.
+- **Cross-Platform**: Runs seamlessly in modern web browsers.
+- **Extensible Architecture**: Modular codebase makes it easy to extend or integrate with other services.
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## How It Works
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1. **Speech Capture**: The app listens for user speech via the browser’s microphone API.
+2. **Transcription**: Audio is transcribed to text using the Whisper AI model.
+3. **Weather Query**: The interpreted user query is matched against weather data sources.
+4. **Response**: The app displays and/or reads out current weather details for the requested location.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+## Project Structure
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+skycast-ai-whisper/
+│
+├── public/                  # Static assets (images, icons, etc.)
+├── src/                     # Source code (components, utilities, app logic)
+│   └── ...                  # Subdirectories for features and modules
+├── index.html               # Main HTML file
+├── package.json             # Project metadata and dependencies
+├── tailwind.config.ts       # Tailwind CSS configuration
+├── vite.config.ts           # Vite bundler configuration
+├── tsconfig*.json           # TypeScript configuration files
+├── eslint.config.js         # Linting configuration
+├── postcss.config.js        # PostCSS configuration
+├── bun.lockb                # Bun package manager lockfile (if used)
+└── components.json          # Component configuration (if used)
 ```
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Tech Stack
 
-**Use GitHub Codespaces**
+- **TypeScript**: Main programming language for reliability and maintainability.
+- **React** *(if used in src/)*: Frontend framework for UI.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+- **Vite**: Fast build tool and development server.
+- **OpenAI Whisper**: Speech-to-text AI model for robust voice recognition.
+- **Bun** / **npm**: Package manager and scripts.
+- **Browser APIs**: For audio recording and playback.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## Setup Instructions
 
-This project is built with:
+1. **Clone the Repository**
+   ```sh
+   git clone https://github.com/SamantD7/skycast-ai-whisper.git
+   cd skycast-ai-whisper
+   ```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+2. **Install Dependencies**
+   - Using npm:
+     ```sh
+     npm install
+     ```
+   - Or with Bun:
+     ```sh
+     bun install
+     ```
 
-## How can I deploy this project?
+3. **(If Required) Configure API Keys**
+   - Set up your OpenAI/Whisper credentials as needed in environment variables or config files.
 
-Simply open [Lovable](https://lovable.dev/projects/b250d1e0-1d36-4cd3-bbc6-cd6f33b98c19) and click on Share -> Publish.
+4. **Run the Application in Development**
+   ```sh
+   npm run dev
+   # or
+   bun run dev
+   ```
 
-## Can I connect a custom domain to my Lovable project?
+5. **Build for Production**
+   ```sh
+   npm run build
+   # or
+   bun run build
+   ```
 
-Yes, you can!
+6. **Open in Browser**
+   - Visit `http://localhost:3000` (or the port shown) to access the app.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+---
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Acknowledgements
+
+- [OpenAI Whisper](https://github.com/openai/whisper) – For providing the core speech-to-text capabilities.
+- [Vercel](https://vercel.com/) – For hosting the live demo.
+- [Tailwind CSS](https://tailwindcss.com/) and [Vite](https://vitejs.dev/) – For making modern web development fast and powerful.
+- Inspiration from open source weather and speech processing projects.
+
+---
+
+## Contact
+
+**Maintainer**: SamantD7  
+**GitHub**: [https://github.com/SamantD7](https://github.com/SamantD7)
+
+For issues, suggestions, or collaboration, please open an issue or reach out via GitHub.
+
+---
