@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Skycast AI Whisper is a TypeScript-based web application that provides an interactive weather forecast experience. Users can retrieve live weather updates and interact with the application through natural language voice commands, streamlining access to meteorological information.
+SkyCast AI is an artificial intelligence-powered weather forecasting platform that delivers accurate, real-time weather predictions and insights for individuals and businesses.
 
 > **Live Demo:** [https://skycast-ai-whisper.vercel.app](https://skycast-ai-whisper.vercel.app)
 
@@ -10,7 +10,6 @@ Skycast AI Whisper is a TypeScript-based web application that provides an intera
 
 ## Project Features
 
-- **Voice-Driven Weather Access**: Get real-time weather forecasts with spoken commands.
 - **State-of-the-Art Speech Recognition**: Integrates OpenAI Whisper for robust and accurate audio-to-text conversion.
 - **User-Friendly Interface**: Clean and modern UI built with Tailwind CSS and Vite.
 - **Cross-Platform**: Runs seamlessly in modern web browsers.
